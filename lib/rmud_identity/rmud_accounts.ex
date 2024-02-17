@@ -10,8 +10,10 @@ defmodule RmudIdentity.RmudAccounts do
     field :balance, :decimal, default: Decimal.new("0")
     field :rmud_address, :string
     field :paid_tx, :string
+    field :domain, :string
     field :type, :string, default: "normal"
-
+    field :paid_tx_domain, :string
+    # remeber to add a new payment tx, and one acct only could have one DOMAIN now.
     timestamps()
   end
 
@@ -21,6 +23,10 @@ defmodule RmudIdentity.RmudAccounts do
 
   def get_by_id(id) do
     Repo.get_by(Ele, id: id)
+  end
+
+  def get_by_domain(domain) do
+    Repo.get_by(Ele, domain: domain)
   end
 
   def get_by_rmud_addr(addr) do
@@ -59,7 +65,7 @@ defmodule RmudIdentity.RmudAccounts do
   @doc false
   def changeset(%Ele{} = ele, attrs) do
     ele
-    |> cast(attrs, [:private_key, :aptos_account, :rmud_address, :balance, :type, :paid_tx])
+    |> cast(attrs, [:private_key, :aptos_account, :rmud_address, :balance, :type, :paid_tx, :domain, :paid_tx_domain])
   end
 end
 

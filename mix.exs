@@ -61,7 +61,7 @@ defmodule RmudIdentity.MixProject do
       {:tentacat, "~> 2.0"},
 
       # Aptos
-      {:web3_aptos_ex, ">= 1.3.8"},
+      {:web3_aptos_ex, ">= 1.3.9"},
 
       {:ecto, "~> 3.7", override: true},
 

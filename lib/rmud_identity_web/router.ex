@@ -18,7 +18,7 @@ defmodule RmudIdentityWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
-    live "/readme_generator", ReadmeGeneratorLive, :index
+    live "/domain", DomainLive, :index
     live "/data_panel", DataPanelLive, :index
     live "/github_linker", GithubLinkerLive, :index
     live "/dorahacks", DorahacksLive, :index

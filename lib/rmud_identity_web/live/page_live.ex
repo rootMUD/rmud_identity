@@ -5,6 +5,7 @@ defmodule RmudIdentityWeb.PageLive do
   alias RmudIdentity.RmudAccounts
 
   use RmudIdentityWeb, :live_view
+  @price Decimal.new("10000000000000000000")
 
   @impl true
   def mount(_params, _session, socket) do
@@ -49,7 +50,7 @@ defmodule RmudIdentityWeb.PageLive do
   @impl true
   def handle_event("submit", %{"form" => %{"tx_id" => tx_id, "nick_name" => nick_name}}, socket) do
     # check if the tx is valid
-    case RmudInteractor.parse_tx(tx_id) do
+    case RmudInteractor.parse_tx(tx_id, @price) do
       {:ok, %{from: rmud_addr}} ->
         # check if the acct in database
         case RmudAccounts.get_by_rmud_addr(rmud_addr) do
@@ -136,8 +137,19 @@ defmodule RmudIdentityWeb.PageLive do
                   phx_change="changed"
                   phx_submit="submit"
           >
+          
+          <!--<.select style="width:300px" options={
+            ["Get by pay $RMUD": "rmud", 
+            "Get by pay Bodhi Asset": "bodhi",
+            "Get by pay 1 USDT on OP Network": "op", 
+            "Get by pay 1 USDT on Polygon Network": "polygon", 
+            "Get by pay 1 USDT on Mapo Network": "mapo", 
+          ]} form={f} field={:select} />-->
+          <br><br>
           <.p>
             <b>Pay 10 $RMUD to 0x73c7448760517E3E6e416b2c130E3c6dB2026A1d</b>
+
+      
             <a href="https://google.com" style="text-decoration: underline;" target="_blank">(How🤔?)</a>
           </.p>
           <.p>Then Paste your tx here:</.p>
@@ -235,9 +247,11 @@ defmodule RmudIdentityWeb.PageLive do
                     <.th>Description</.th>
                     <.th>URL</.th>
                     <.th>Verification URL</.th>
+                    <.th>Spec Fields</.th>
                   </.tr>
                 </thead>
                 <tbody>
+                <!-- TODO: impl -->
                 </tbody>
               </.table>
           </div>

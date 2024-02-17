@@ -1,4 +1,12 @@
 defmodule TypeTranslator do
+  def get_data(func_str, params) do
+    payload =
+      func_str
+      |> ABI.encode(params)
+      |> Base.encode16(case: :lower)
+
+    "0x" <> payload
+  end
 
   def data_to_int(raw) do
     raw
@@ -35,6 +43,7 @@ defmodule TypeTranslator do
       int
       |> Integer.to_string(16)
       |> String.downcase()
+
     "0x#{payload}"
   end
 
@@ -43,6 +52,7 @@ defmodule TypeTranslator do
     |> String.slice(2..-1)
     |> String.to_integer(16)
   end
+
   def hex_to_bytes(hex) do
     hex
     |> String.slice(2..-1)
