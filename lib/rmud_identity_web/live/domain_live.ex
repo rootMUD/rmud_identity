@@ -131,7 +131,7 @@ defmodule RmudIdentityWeb.DomainLive do
               result = RmudIdentityHandler.add_domain_service(
                   tx_id,
                   acct.rmud_address, 
-                  domain, 
+                  String.downcase(domain), 
                   acct, 
                   acct.private_key
               )
@@ -141,12 +141,12 @@ defmodule RmudIdentityWeb.DomainLive do
                   |> put_flash(:info, "register rmud domain success!")
                   |> assign(show_domain_status: 0)
               }
-              else
-                  {
-                  :noreply,
-                      socket
-                      |> put_flash(:error, "this rmud identity has registered domain already!")
-                  }
+          else
+              {
+              :noreply,
+                  socket
+                  |> put_flash(:error, "this rmud identity has registered domain already!")
+              }
           end
       end
     end
