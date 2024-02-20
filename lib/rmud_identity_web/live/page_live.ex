@@ -251,7 +251,24 @@ defmodule RmudIdentityWeb.PageLive do
                   </.tr>
                 </thead>
                 <tbody>
-                <!-- TODO: impl -->
+                <%= for item <- assigns[:did_data][:service_aggregator][:service_details] do %>
+                <!-- %{description: "The unique domain service of rmud", expired_at: "0", spec_fields: "['domain': test]", url: "https://id.rootmud.xyz/domain?addr=0x0", verification_url: ""} -->
+                <.tr>
+                  <.td>
+                    <%= item.description %>
+                  </.td>  
+                  <.td>
+                    <%= item.url %>
+                  </.td>  
+                  <.td>
+                    <%= item.verification_url %>
+                  </.td>
+                  <.td>
+                    <%= item.spec_fields %>
+                  </.td>    
+                </.tr>
+                <% end %>
+
                 </tbody>
               </.table>
           </div>
