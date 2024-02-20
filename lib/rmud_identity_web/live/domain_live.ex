@@ -85,7 +85,7 @@ defmodule RmudIdentityWeb.DomainLive do
     case RmudInteractor.parse_tx(tx_id, @price) do
       {:ok, %{from: rmud_addr}} ->
         balance = RmudInteractor.balance_of(rmud_addr)
-        IO.puts(inspect(balance))
+        # IO.puts(inspect(balance))
 
         if not Decimal.lt?(balance, Decimal.new("3000")) do
           register_domain(tx_id, rmud_addr, socket.assigns.form_now["domain"], socket)
@@ -109,40 +109,46 @@ defmodule RmudIdentityWeb.DomainLive do
   def register_domain(tx_id, rmud_addr, domain, socket) do
     # find account in database.
     acct = RmudAccounts.get_by_rmud_addr(String.downcase(rmud_addr))
-
-    case acct do
-      nil ->
-        {
-          :noreply,
-          socket
-          |> put_flash(:error, "you should register RMUD ID first")
-        }
-
-      acct ->
-        # check if domain in acct.
-        if is_nil(acct.domain) or acct.domain == "" do
-            # update did with domain.
-            result = RmudIdentityHandler.add_domain_service(
-                tx_id,
-                acct.rmud_address, 
-                domain, 
-                acct, 
-                acct.private_key
-            )
-            {
+    if tx_id == acct.paid_tx do
+      {
+        :noreply,
+            socket
+            |> put_flash(:error, "this tx has used already!")
+      }
+    else
+      case acct do
+        nil ->
+          {
             :noreply,
-                socket
-                |> put_flash(:info, "register rmud domain success!")
-                |> assign(show_domain_status: 0)
-            }
-            else
-                {
-                :noreply,
-                    socket
-                    |> put_flash(:error, "this rmud identity has registered domain already!")
-                }
-        end
-
+            socket
+            |> put_flash(:error, "you should register RMUD ID first")
+          }
+  
+        acct ->
+          # check if domain in acct.
+          if is_nil(acct.domain) or acct.domain == "" do
+              # update did with domain.
+              result = RmudIdentityHandler.add_domain_service(
+                  tx_id,
+                  acct.rmud_address, 
+                  domain, 
+                  acct, 
+                  acct.private_key
+              )
+              {
+              :noreply,
+                  socket
+                  |> put_flash(:info, "register rmud domain success!")
+                  |> assign(show_domain_status: 0)
+              }
+              else
+                  {
+                  :noreply,
+                      socket
+                      |> put_flash(:error, "this rmud identity has registered domain already!")
+                  }
+          end
+      end
     end
   end
 
