@@ -5,6 +5,7 @@ defmodule RmudIdentity.RmudAccounts do
   alias RmudIdentity.Repo
 
   schema "rmud_account" do
+    # field :encrypted_private_key, :string
     field :private_key, :string
     field :aptos_account, :string
     field :balance, :decimal, default: Decimal.new("0")
@@ -67,5 +68,21 @@ defmodule RmudIdentity.RmudAccounts do
     ele
     |> cast(attrs, [:private_key, :aptos_account, :rmud_address, :balance, :type, :paid_tx, :domain, :paid_tx_domain])
   end
+
+  # +------------+
+  # | Spec Funcs |
+  # +------------+
+
+  defp encrypt_private_key(changeset) do
+    private_key = get_field(changeset, :private_key)
+    case private_key do
+      nil -> changeset
+      _ ->
+        secret_key_base = Application.get_env(:rmud_identity, :secret_key_base) |> Base.decode64!()
+        encrypted_private_key = :crypto.block_encrypt(:aes_ecb, secret_key_base, private_key)
+        put_change(changeset, :encrypted_private_key, encrypted_private_key)
+    end
+  end
+
 end
 

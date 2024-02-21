@@ -51,6 +51,7 @@ defmodule RmudIdentityWeb.DomainLive do
 
   @impl true
   def handle_event("submit", %{"form" => %{"domain" => domain}}, socket) do
+    domain = String.downcase(domain)
     if String.length(domain) <= 3 do
       {
         :noreply,

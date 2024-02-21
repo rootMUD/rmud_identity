@@ -8,7 +8,9 @@
 import Config
 
 config :rmud_identity,
-  ecto_repos: [RmudIdentity.Repo]
+  ecto_repos: [RmudIdentity.Repo],
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
+  iv:  Map.fetch!(System.get_env(), "IV")
 
 # Configures the endpoint
 config :rmud_identity, RmudIdentityWeb.Endpoint,

@@ -3,8 +3,8 @@ defmodule Crypto do
     Crypto Lib
   """
 
-  @secret_key Application.get_env(:super_issuer, :secret_key)
-  @iv Application.get_env(:super_issuer, :iv)
+  @secret_key Application.get_env(:rmud_identity, :secret_key_base)
+  @iv TypeTranslator.hex_to_bin(Application.get_env(:rmud_identity, :iv))
   def sha256(data), do: :crypto.hash(:sha256, data)
   def ripemd160(data), do: :crypto.hash(:ripemd160, data)
   def double_sha256(data), do: data |> sha256 |> sha256
@@ -48,13 +48,16 @@ defmodule Crypto do
   def encrypt_key(key, password) do
     md5_pwd = md5(password)
     # :crypto.block_encrypt(:aes_ecb, md5_pwd, pad(key, 16))
-    :crypto.crypto_one_time(:aes_256_cbc, md5_pwd, @iv, Crypto.pad(key, 16), true)
+    :aes_256_cbc
+    |> :crypto.crypto_one_time(md5_pwd, @iv, Crypto.pad(key, 16), true)
+    |> TypeTranslator.bin_to_hex()
   end
 
   def decrypt_key(key) do
     decrypt_key(key, @secret_key)
   end
   def decrypt_key(encrypted_key, password) do
+    encrypted_key = TypeTranslator.hex_to_bin(encrypted_key)
     md5_pwd = md5(password)
 
     :crypto.crypto_one_time(:aes_256_cbc, md5_pwd, @iv, encrypted_key, false)

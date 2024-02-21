@@ -59,6 +59,10 @@ defmodule TypeTranslator do
     |> Base.decode16(case: :mixed)
   end
 
+  def bin_to_hex(bin) do
+    "0x#{Base.encode16(bin, case: :lower)}"
+  end
+
   @spec addr_to_bin(String.t()) :: Binary.t()
   def addr_to_bin(addr_str) do
     addr_str
