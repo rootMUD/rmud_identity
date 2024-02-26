@@ -11,7 +11,7 @@ defmodule RmudIdentityWeb.DAOLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    did_data = RmudIdentityHandler.get_did_data(@addr)
+    {:ok, did_data} = RmudIdentityHandler.get_did_data(@addr)
     {:ok,
      assign(socket,
        modal: false,
