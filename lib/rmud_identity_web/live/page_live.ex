@@ -94,7 +94,8 @@ defmodule RmudIdentityWeb.PageLive do
   @impl true
   def handle_event("submit", %{"form_check" => %{"addr" => addr}}, socket) do
     addr = String.downcase(addr)
-    result =RmudIdentityHandler.get_did_data(addr)
+    IO.puts inspect addr
+    result = RmudIdentityHandler.get_did_data(addr)
     # got addr from database.
     case result do
       {:error, _} ->
@@ -216,6 +217,7 @@ defmodule RmudIdentityWeb.PageLive do
                     <%= case item.addr_type do
                       "0" -> "EVM"
                       "1" -> "Aptos"
+                      "2" -> "BTC"
                       _ -> "Others"
                     end%>
                 </.td>
@@ -229,6 +231,7 @@ defmodule RmudIdentityWeb.PageLive do
                         "eth" -> live_component @socket, RmudIdentityWeb.BadgeComponent, color: "secondary", label: "eth", variant: "outline"
                         "op" -> live_component @socket, RmudIdentityWeb.BadgeComponent, color: "white", label: "op", variant: "outline"
                         "polygon" -> live_component @socket, RmudIdentityWeb.BadgeComponent, color: "info", label: "polygon", variant: "outline"
+                        "btc" -> live_component @socket, RmudIdentityWeb.BadgeComponent, color: "warning", label: "btc", variant: "outline"
                       end %>
                   <% end %>
                 </.td>
